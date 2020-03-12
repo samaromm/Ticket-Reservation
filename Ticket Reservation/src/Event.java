@@ -38,7 +38,7 @@ public class Event extends Lists {
 			for(int i=1;i<=tickets;i++) {
 				Tickets t =new Tickets();
 				Lists.ticketHolders.put(t,buyer);
-				Lists.soldTickets.put(Tickets.getId(),t);
+				soldTickets.put(Tickets.getId(),t);
 				System.out.println("Ticket with id "+Tickets.getId()+" bought by "+buyer.name+" with price "+this.price);
 				this.capacity--;
 				Lists.earned+=this.price;
@@ -49,20 +49,25 @@ public class Event extends Lists {
 	}
 	
 	
-	public void returnTicket(int id) {
+	public void returnTicket(registered buyer,int id) {
+		boolean check = false;
 		for(Map.Entry<Integer, Tickets> entry : Lists.soldTickets.entrySet()) {
 		    int key = entry.getKey();
 			if(key==id) {
+				registered b = Lists.ticketHolders.get(key);
+				if(b==buyer) {
 				Lists.ticketHolders.remove(Lists.soldTickets.get(key));
 				Lists.returnedTickets.add(Lists.soldTickets.get(key));
 				Lists.soldTickets.remove(key);
-				System.out.println("Ticket number: "+id+ "has been returned");
+				System.out.println("Ticket number: "+id+ " has been returned");
 				Lists.earned-=this.price;
 				this.capacity++;
+				check=true;
 				break;
-			}
-			else System.out.println("Ticket isn't found");
+			} 
+		  }
 		}
+		if(!check) System.out.println("Ticket isn't found");
 	}
 	
 	
@@ -82,41 +87,46 @@ public class Event extends Lists {
 				Tickets t =new Tickets();
 				Lists.ticketHolders.put(t,buyer);
 				Lists.reservedTickets.put(Tickets.getId(),t);
-				System.out.println("Ticket with id "+Tickets.getId()+" reserved by "+buyer.name+" with price "+this.price);
+				System.out.println("Ticket with id "+Tickets.getId()+" reserved by "+buyer.name);
 				this.capacity--;
 			}
-			System.out.println(buyer.name+" bought "+ tickets+" tikcets for the event "+this.name+ " and the total price is "+ ((double)this.price*tickets));
+			System.out.println(buyer.name+" reserved "+ tickets+" tikcets for the event "+this.name);
 		}}
 	  else {System.out.println("Event has been removed\nlist of upcoming events:"); printDetailes();}
 	}
 	
 	
 	//cancel for reserved, returned for sold
-	public void cancelTickets(int id) {
+	public void cancelTickets(registered buyer,int id) {
+		boolean check=false;
 		for(Map.Entry<Integer, Tickets> entry : Lists.reservedTickets.entrySet()) {
 		    int key = entry.getKey();
 			if(key==id) {
+				registered b = Lists.ticketHolders.get(key);
+				if(b==buyer) {
 				Lists.ticketHolders.remove(Lists.reservedTickets.get(key));
 				Lists.returnedTickets.add(Lists.reservedTickets.get(key));
 				Lists.reservedTickets.remove(key);
 				System.out.println("Ticket number: "+id+ "has been canceled");
 				this.capacity++;
+				check=true;
 				break;
-			}
-			else System.out.println("Ticket isn't found");
+			}}
 		}
+
+		if(!check) System.out.println("Ticket isn't found");
 		
 	}
 	
 	
 	//check if a date is from the past
-	public boolean compareDate(LocalDate date) {
+	protected boolean compareDate(LocalDate date) {
 		LocalDate currentDate = LocalDate.now();
 		return(date.compareTo(currentDate)>0);
 	}
 	
 	
-	public void printDetailes() {
+	protected void printDetailes() {
 		for(int i=0; i<Lists.addedEvents.size(); i++) {
 			Event e = Lists.addedEvents.get(i);
 			if(compareDate(e.date)) {

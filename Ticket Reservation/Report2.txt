@@ -1,0 +1,11 @@
+**Report: 
+The created events are:
+1- ANALYTECH 2020
+2- TAMER 2020
+3- art gallery 2020
+
+The number of Tickets had been reserved:5
+The number of Tickets had been sold: 4
+The number of Tickets had been returned: 0
+
+Total earnings: 200.0

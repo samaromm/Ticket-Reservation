@@ -10,7 +10,7 @@ public class Exhibition extends Event{
 		System.out.println("You can not reserve in Exhibition");
 	}
 	
-	public void cancelTickets(int id) {
+	public void cancelTickets(registered buyer,int id) {
 		System.out.println("You can not cancel in Exhibition");
 	}
 
